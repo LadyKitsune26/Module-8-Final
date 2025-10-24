@@ -33,7 +33,7 @@ function Posts() {
           type="number" 
           value={searchId} 
           onChange={(event) => setSearchId(event.target.value)}
-           onKeyPress={(event)} />
+           onKeyDown={(event) => onSearch(event)} />
           <button onClick={() => onSearch()}>Enter</button>
         </div>
       </div>
