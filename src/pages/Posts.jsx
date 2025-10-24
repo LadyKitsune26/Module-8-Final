@@ -1,14 +1,64 @@
-import React from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 function Posts() {
-    const params = useParams();
-    console.log(params)
+  const { id } = useParams();
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchId, setSearchId] = useState();
+
+  function onSearch(){
+    fetchPosts(searchId)
+  }
+
+  async function fetchPosts(userId) {
+      const { data } = await axios.get(
+        `https://jsonplaceholder.typicode.com/posts?userId=${userId || id}`
+      );
+      setPosts(data);
+      setLoading(false);
+    }
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
   return (
-    <div>
-        Posts
-    </div>
-  )
+    <>
+      <div className="post__search">
+        <button>← Back</button>
+        <div className="post__search--container">
+          <label className="post__search--label">Search by Id</label>
+          <input 
+          type="number" 
+          value={searchId} 
+          onChange={(event) => setSearchId(event.target.value)}
+           onKeyPress={(event)} />
+          <button onClick={() => onSearch()}>Enter</button>
+        </div>
+      </div>
+      {loading 
+      ? new Array(10).fill(0).map((_, index) => (
+        <div className="post" key={index}>
+          <div className="post__title">
+            <div className="post__title--skeleton">post.title</div>
+          </div>
+          <div className="post__body">
+            <p className="post__body--skeleton">post.body</p>
+          </div>
+        </div>
+      )) : (
+        posts.map((post) => {
+          return (
+            <div className="post" key={post.id}>
+              <div className="post__title">{post.title}</div>
+              <p className="post__body">{post.body}</p>
+            </div>
+          );
+        })
+      )}
+    </>
+  );
 }
 
-export default Posts
+export default Posts;
