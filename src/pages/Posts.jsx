@@ -20,6 +20,10 @@ function Posts() {
       setLoading(false);
     }
 
+  function onSearchKeyPress(key){
+     key === 'Enter' && onSearch();
+  }
+
   useEffect(() => {
     fetchPosts();
   }, []);
@@ -33,7 +37,8 @@ function Posts() {
           type="number" 
           value={searchId} 
           onChange={(event) => setSearchId(event.target.value)}
-           onKeyDown={(event) => onSearch(event)} />
+           onKeyDown={(event) => onSearchKeyPress(event.key)}
+            />
           <button onClick={() => onSearch()}>Enter</button>
         </div>
       </div>
